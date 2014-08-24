@@ -1,2 +1,2 @@
 GotoWork game
-By Jibun & Ramichan
+By Jibun & Ramichan 
