@@ -5,6 +5,11 @@ TagManager:
   tags:
   - character
   - door
+  - building
+  - livingRoom
+  - stair
+  - gameManager
+  - object
   - 
   Builtin Layer 0: Default
   Builtin Layer 1: TransparentFX
