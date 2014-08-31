@@ -4,6 +4,7 @@ using System.Collections;
 public class Room : MonoBehaviour {
 
 	public GameObject parentRoom;
+	public GameObject actualRoom;
 
 	public int getRoomDepth(){
 		if(parentRoom == null){
@@ -11,6 +12,10 @@ public class Room : MonoBehaviour {
 		}else{
 			return 1 + parentRoom.GetComponent<Room>().getRoomDepth();
 		}
+	}
+
+	public GameObject getActualRoom(){
+		return this.gameObject;
 	}
 
 	// Use this for initialization

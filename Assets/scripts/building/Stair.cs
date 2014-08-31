@@ -26,6 +26,7 @@ public class Stair : MonoBehaviour {
 			Vector2 connectedStairPosition = new Vector2(stairToConnect.transform.position.x, stairToConnect.transform.position.y-(float)0.286);
 			
 			character.transform.position = connectedStairPosition;
+			character.gameObject.GetComponent<characterValues>().currentRoom = stairToConnect.transform.parent.gameObject;
 		} 
 
 		

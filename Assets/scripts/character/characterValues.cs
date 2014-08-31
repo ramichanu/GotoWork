@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class characterValues : MonoBehaviour {
 
 	public GameObject door;
+	public GameObject currentRoom;
 
 	// Use this for initialization
 	void Start () {
@@ -13,7 +14,7 @@ public class characterValues : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyUp ("up")) {
+		/*if (Input.GetKeyUp ("up")) {
 			Debug.Log ("Player width: " + this.gameObject.GetComponent<SpriteRenderer>().bounds.extents.x);
 
 			GameObject mainDoorRoom = door.transform.parent.gameObject;
@@ -34,6 +35,6 @@ public class characterValues : MonoBehaviour {
 					}
 				}
 			}
-		} 
+		} */
 	}
 }

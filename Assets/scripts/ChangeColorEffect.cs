@@ -3,9 +3,9 @@ using System.Collections;
 
 public class ChangeColorEffect : MonoBehaviour {
 
-	/*void executeEffect(GameObject character){
+	void executeEffect(GameObject character){
 		this.GetComponent<SpriteRenderer>().color = Color.red;
-	}*/
+	}
 
 	// Use this for initialization
 	void Start () {

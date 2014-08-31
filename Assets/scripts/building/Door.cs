@@ -39,6 +39,7 @@ public class Door : MonoBehaviour {
 			Vector2 connectedDoorPosition = new Vector2(doorToConnect.transform.position.x, doorToConnect.transform.position.y-(float)0.286);
 
 			character.transform.position = connectedDoorPosition;
+			character.gameObject.GetComponent<characterValues>().currentRoom = doorToConnect.transform.parent.gameObject;
 
 
 		}

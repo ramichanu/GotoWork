@@ -10,12 +10,16 @@ public class ProceduralBuild : MonoBehaviour {
 	public int verticalRoomPadding = 10;
 	public GameObject floor;
 	public GameObject hall;
+	public GameObject property = null;
 	//Private
 	GameObject lastFloorStairUp = null;
 	GameObject newBuilding;
 	GameObject newHall;
 	GameObject newFloor;
 	GameObject newRoom;
+	GameObject newProperty;
+	GameObject newBathRoom;
+
 	float positionY;
 	int buildingCount;
 	int floorCount;
@@ -80,12 +84,14 @@ public class ProceduralBuild : MonoBehaviour {
 			}
 		}
 		lastFloorStairUp = tempLastFloorStairUp;
-		
+
 		foreach (GameObject floorDoor in Utils.getChildrenWithTag(newFloor, "door")){
 			positionY += verticalRoomPadding;
 			generateOneRoom(floorDoor);
 		}
 	}
+
+
 
 	void generateOneRoom(GameObject floorDoor){
 
@@ -98,7 +104,21 @@ public class ProceduralBuild : MonoBehaviour {
 			{
 				floorDoor.GetComponent<Door>().connectedDoor = roomDoor;
 				roomDoor.GetComponent<Door>().connectedDoor = floorDoor;
+			}else if(roomDoor.name == "bath"){
+				positionY += verticalRoomPadding;
+				generateOneBath(roomDoor);
 			}
+		}
+	}
+
+	void generateOneBath(GameObject roomDoor){
+		int bathType = Random.Range (1, 3);
+		UnityEngine.Object bathRoomObject = Resources.Load (Utils.PREFAB_BUILDING_FOLDER + "bath" + bathType);
+		newBathRoom = Instantiate(bathRoomObject, transform.position= new Vector2(newBuilding.transform.position.x, positionY), transform.rotation) as GameObject;
+
+		foreach (GameObject bathDoor in Utils.getChildrenWithTag(newBathRoom, "door")){
+			bathDoor.GetComponent<Door>().connectedDoor = roomDoor;
+			roomDoor.GetComponent<Door>().connectedDoor = bathDoor;
 		}
 	}
 
