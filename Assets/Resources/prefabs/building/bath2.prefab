@@ -30,6 +30,7 @@ GameObject:
   - 212: {fileID: 21200002}
   - 61: {fileID: 6100004}
   - 61: {fileID: 6100002}
+  - 114: {fileID: 11400002}
   m_Layer: 0
   m_Name: bath2
   m_TagString: Untagged
@@ -123,6 +124,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   connectedDoors: []
   connectedDoor: {fileID: 0}
+--- !u!114 &11400002
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bf0c96a493349549a1d60c8dc51b246, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentRoom: {fileID: 0}
+  actualRoom: {fileID: 0}
 --- !u!212 &21200000
 SpriteRenderer:
   m_ObjectHideFlags: 1

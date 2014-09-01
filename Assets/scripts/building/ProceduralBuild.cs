@@ -96,9 +96,15 @@ public class ProceduralBuild : MonoBehaviour {
 	void generateOneRoom(GameObject floorDoor){
 
 		int roomType = Random.Range (1, 3);
+
 		UnityEngine.Object roomObject = Resources.Load (Utils.PREFAB_BUILDING_FOLDER + "livingRoom" + roomType);
 		newRoom = Instantiate(roomObject, transform.position= new Vector2(newBuilding.transform.position.x, positionY), transform.rotation) as GameObject;
 		newRoom.GetComponent<Room>().parentRoom = newFloor;
+
+		UnityEngine.Object propertyObject = Resources.Load (Utils.PREFAB_BUILDING_FOLDER + "property");
+		property = Instantiate(propertyObject, transform.position= new Vector2(newBuilding.transform.position.x, positionY), transform.rotation) as GameObject;
+		newRoom.transform.parent = property.transform;
+
 		foreach (GameObject roomDoor in Utils.getChildrenWithTag(newRoom, "door")){
 			if(roomDoor.name == "entrance")
 			{
@@ -115,6 +121,10 @@ public class ProceduralBuild : MonoBehaviour {
 		int bathType = Random.Range (1, 3);
 		UnityEngine.Object bathRoomObject = Resources.Load (Utils.PREFAB_BUILDING_FOLDER + "bath" + bathType);
 		newBathRoom = Instantiate(bathRoomObject, transform.position= new Vector2(newBuilding.transform.position.x, positionY), transform.rotation) as GameObject;
+
+		newBathRoom.GetComponent<Room>().parentRoom = roomDoor.transform.parent.gameObject;
+		Transform property = roomDoor.transform.parent.transform.parent;
+		newBathRoom.transform.parent = property;
 
 		foreach (GameObject bathDoor in Utils.getChildrenWithTag(newBathRoom, "door")){
 			bathDoor.GetComponent<Door>().connectedDoor = roomDoor;
