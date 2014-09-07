@@ -49,6 +49,7 @@ public class ProceduralBuild : MonoBehaviour {
 		positionY += verticalRoomPadding;
 		newHall = Instantiate(hall, transform.position= new Vector2(newBuilding.transform.position.x, positionY), transform.rotation) as GameObject;
 		newHall.GetComponent<Room>().parentRoom = newBuilding;
+		newHall.GetComponent<Room>().building = newBuilding;
 		foreach (GameObject hallDoor in Utils.getChildrenWithTag(newHall, "door")){
 			if(hallDoor.name == "entrance")
 			{
@@ -70,6 +71,7 @@ public class ProceduralBuild : MonoBehaviour {
 	void generateOneFloor(int i){
 		newFloor = Instantiate(floor, transform.position= new Vector2(newBuilding.transform.position.x, positionY), transform.rotation) as GameObject;
 		newFloor.GetComponent<Room>().parentRoom = newHall;
+		newFloor.GetComponent<Room>().building = newBuilding;
 		GameObject tempLastFloorStairUp = null;
 		foreach (GameObject floorStair in Utils.getChildrenWithTag(newFloor, "stair")){
 			if(floorStair.name == "stairDown"){
@@ -99,7 +101,9 @@ public class ProceduralBuild : MonoBehaviour {
 
 		UnityEngine.Object roomObject = Resources.Load (Utils.PREFAB_BUILDING_FOLDER + "livingRoom" + roomType);
 		newRoom = Instantiate(roomObject, transform.position= new Vector2(newBuilding.transform.position.x, positionY), transform.rotation) as GameObject;
+
 		newRoom.GetComponent<Room>().parentRoom = newFloor;
+		newRoom.GetComponent<Room>().building = newBuilding;
 
 		UnityEngine.Object propertyObject = Resources.Load (Utils.PREFAB_BUILDING_FOLDER + "property");
 		property = Instantiate(propertyObject, transform.position= new Vector2(newBuilding.transform.position.x, positionY), transform.rotation) as GameObject;
@@ -123,6 +127,7 @@ public class ProceduralBuild : MonoBehaviour {
 		newBathRoom = Instantiate(bathRoomObject, transform.position= new Vector2(newBuilding.transform.position.x, positionY), transform.rotation) as GameObject;
 
 		newBathRoom.GetComponent<Room>().parentRoom = roomDoor.transform.parent.gameObject;
+		newBathRoom.GetComponent<Room>().building = newBuilding;
 		Transform property = roomDoor.transform.parent.transform.parent;
 		newBathRoom.transform.parent = property;
 

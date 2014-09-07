@@ -5,6 +5,7 @@ public class Room : MonoBehaviour {
 
 	public GameObject parentRoom;
 	public GameObject actualRoom;
+	public GameObject building;
 
 	public int getRoomDepth(){
 		if(parentRoom == null){
