@@ -1353,6 +1353,8 @@ GameObject:
   - 4: {fileID: 1171404623}
   - 114: {fileID: 1171404624}
   - 114: {fileID: 1171404625}
+  - 114: {fileID: 1171404626}
+  - 114: {fileID: 1171404627}
   m_Layer: 0
   m_Name: gameManager
   m_TagString: gameManager
@@ -1407,6 +1409,31 @@ MonoBehaviour:
   fromBuilding: {fileID: 0}
   targetEntity: {fileID: 0}
   targetRoom: {fileID: 0}
+--- !u!114 &1171404626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1171404622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 245d0fad17aceb3428e1c7faa4a30bef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  day: 1
+  hour: 0
+  minut: 0
+--- !u!114 &1171404627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1171404622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d2403da3cba37e4eaf60a547b19c9e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1337756288
 GameObject:
   m_ObjectHideFlags: 0
