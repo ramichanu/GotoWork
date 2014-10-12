@@ -4,7 +4,7 @@ using System.Collections;
 public class ProceduralBuild : MonoBehaviour {
 
 	//Public
-	public int buildingCountMax = 10;
+	public int buildingCountMax = 2;
 	public int floorCountMax = 5;
 	public int spaceBetweetBuildings = 20;
 	public int verticalRoomPadding = 10;

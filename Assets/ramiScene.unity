@@ -152,7 +152,7 @@ Camera:
   far clip plane: 1000.28003
   field of view: 60
   orthographic: 1
-  orthographic size: 3.71000004
+  orthographic size: 19.0900002
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -217,7 +217,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 2000000, guid: fef7d06c0731a82458fb8cb46dc5d142, type: 2}
       propertyPath: orthographic size
-      value: 3.71000004
+      value: 19.0900002
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: fef7d06c0731a82458fb8cb46dc5d142, type: 2}
@@ -265,7 +265,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3723e0bc02114b7498abaf32d696e8c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingCountMax: 10
+  buildingCountMax: 2
   floorCountMax: 5
   spaceBetweetBuildings: 20
   verticalRoomPadding: 15

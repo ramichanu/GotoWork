@@ -49,21 +49,31 @@ public class moveCharacter : MonoBehaviour {
 		if (from != null && target != null && finalPath.Count != 0) {
 			GameObject targetObject = finalPath.Peek();
 			bool sameRoom = from.transform.parent == target.transform.parent;
+			float fromX = from.transform.position.x;
+			float targetX = 0f;
+			if(targetObject.transform.tag == "door"){
+				targetX = targetObject.transform.GetComponent<Door>().connectedDoor.transform.position.x;
+			}else if(targetObject.transform.tag == "stair"){
+				targetX = targetObject.transform.GetComponent<Stair>().connectedStair.transform.position.x;
+			}else{
+				targetX = targetObject.transform.position.x;
+			}
+
 			if (targetObject != null) {
 
-				if((Mathf.Round(from.transform.position.x) > Mathf.Round(targetObject.transform.position.x)))
+				if((Mathf.Round(fromX) > Mathf.Round(targetX)))
 				{
 					Vector3 pos = from.transform.position;
 					pos.x -= velocity * Time.deltaTime;
 					from.transform.position = pos;
 					
 					
-				}else if((Mathf.Round(from.transform.position.x) < Mathf.Round(targetObject.transform.position.x))){
+				}else if((Mathf.Round(from.transform.position.x) < Mathf.Round(targetX))){
 					Vector3 pos = from.transform.position;
 					pos.x += velocity * Time.deltaTime;
 					from.transform.position = pos;
 					
-				}else if((Mathf.Round(from.transform.position.x) == Mathf.Round(targetObject.transform.position.x))){
+				}else if((Mathf.Round(from.transform.position.x) == Mathf.Round(targetX))){
 					if(targetObject.transform.tag == "door" || targetObject.transform.tag == "stair")
 					{
 						from.transform.position = targetObject.transform.position;

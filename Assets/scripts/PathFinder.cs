@@ -7,6 +7,8 @@ public class PathFinder : MonoBehaviour {
 	
 	List<CandidatePath> openList;
 	List<CandidatePath> closedList;
+	List<CandidatePath> initialCandidates;
+
 	public GameObject target;
 	public GameObject from;
 	public GameObject currentRoom;
@@ -47,6 +49,11 @@ public class PathFinder : MonoBehaviour {
 		if(candidateObject == null)
 		{
 			candidateObject = new GameObject ();
+
+		}
+
+		if(initialCandidates == null){
+			initialCandidates = new List<CandidatePath> ();
 		}
 
 		CandidatePath candidate = candidateObject.AddComponent<CandidatePath>();
@@ -56,9 +63,10 @@ public class PathFinder : MonoBehaviour {
 		candidate.keyWeight = weight;
 		candidate.previousCandidatePath = null;
 		candidate.checkPoint = from;
-		List<CandidatePath> initialCandidates = new List<CandidatePath> ();
+
 		initialCandidates.Add(candidate);
 		putCandidatesInOpenList (initialCandidates);
+
 		
 		while (true) {
 			sortOpenList();
@@ -71,6 +79,11 @@ public class PathFinder : MonoBehaviour {
 		}
 		
 		finalPath = retrievePath ();
+		GameObject.Destroy (candidate);
+		GameObject.Destroy (candidateObject);
+		initialCandidates.Clear ();
+
+
 	}
 	
 	public Stack<GameObject> retrievePath(){
@@ -123,6 +136,8 @@ public class PathFinder : MonoBehaviour {
 			candidate.previousCandidatePath = obj;
 			
 			candidates.Add(candidate);
+
+
 		}
 		foreach (GameObject childStair in Utils.getChildrenWithTag(room, "stair")) {
 			GameObject connectedStair = childStair.GetComponent<Stair>().connectedStair;
