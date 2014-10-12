@@ -56,7 +56,7 @@ public class Door : MonoBehaviour {
 
 			character.gameObject.GetComponent<characterValues>().currentRoom = doorToConnectParent;
 			character.transform.parent = doorToConnectParent.transform;
-			
+
 			
 		}
 	}

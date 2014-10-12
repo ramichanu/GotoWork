@@ -8,7 +8,7 @@ public class moveCharacter : MonoBehaviour {
 	GameObject from;
 	GameObject target;
 	public Stack<GameObject> finalPath;
-	public float velocity = 5;
+	public float velocity = 3;
 
 	protected float pathFinderRefresh = 0.33f;
 	protected float acumulatedTime = 0;
@@ -64,7 +64,6 @@ public class moveCharacter : MonoBehaviour {
 					from.transform.position = pos;
 					
 				}else if((Mathf.Round(from.transform.position.x) == Mathf.Round(targetObject.transform.position.x))){
-					Debug.Log ("DESTINO");
 					if(targetObject.transform.tag == "door" || targetObject.transform.tag == "stair")
 					{
 						from.transform.position = targetObject.transform.position;
@@ -73,6 +72,7 @@ public class moveCharacter : MonoBehaviour {
 						from.GetComponent<characterValues>().currentRoom = parentWithRoom;
 					}
 					finalPath.Pop ();
+					targetObject = null;
 				}
 			}
 		}
