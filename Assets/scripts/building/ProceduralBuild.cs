@@ -48,9 +48,6 @@ public class ProceduralBuild : MonoBehaviour {
 		camera.GetComponent<Camera> ().target = player.transform;
 
 
-
-
-
 		buildingCount = Random.Range (1, buildingCountMax);
 		for (int i=1; i<=buildingCount; i++) {
 			positionY = 0;

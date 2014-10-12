@@ -128,6 +128,7 @@ public class PathFinder : MonoBehaviour {
 			}
 
 			CandidatePath candidate = candidateObject.AddComponent<CandidatePath>();
+			candidate.transform.tag = "candidate";
 			candidate.weight = weightRoom;
 			candidate.currentWeight = obj.currentWeight + 1;
 			int weight = candidate.weight + candidate.currentWeight;
@@ -136,6 +137,8 @@ public class PathFinder : MonoBehaviour {
 			candidate.previousCandidatePath = obj;
 			
 			candidates.Add(candidate);
+
+
 
 
 		}
@@ -158,11 +161,15 @@ public class PathFinder : MonoBehaviour {
 			candidate.currentWeight = obj.currentWeight + 1;
 			int weight = candidate.weight + candidate.currentWeight;
 			candidate.keyWeight = weight;
+			candidate.transform.tag = "candidate";
 			candidate.checkPoint = connectedStair;
 			candidate.previousCandidatePath = obj;
 			candidates.Add(candidate);
 		}
-		
+		GameObject[] gameObjects =  GameObject.FindGameObjectsWithTag ("candidate");
+		foreach (GameObject target in gameObjects) {
+			GameObject.Destroy(target);
+		}
 		return candidates;
 	}
 	
