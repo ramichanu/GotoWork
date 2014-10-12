@@ -24,9 +24,18 @@ public class Stair : MonoBehaviour {
 		if (Input.GetKeyUp ("up") && charFrontStair) {
 			GameObject stairToConnect = (GameObject)connectedStairs[0];
 			Vector2 connectedStairPosition = new Vector2(stairToConnect.transform.position.x, stairToConnect.transform.position.y-(float)0.286);
-			
+
+			GameObject stairToConnectParent = stairToConnect.transform.parent.gameObject;
 			character.transform.position = connectedStairPosition;
 			character.gameObject.GetComponent<characterValues>().currentRoom = stairToConnect.transform.parent.gameObject;
+
+			if(stairToConnect.transform.parent.tag == "building")
+			{
+				stairToConnect = stairToConnect.transform.parent.transform.parent.gameObject;
+			}
+			
+			character.gameObject.GetComponent<characterValues>().currentRoom = stairToConnectParent;
+			character.transform.parent = stairToConnectParent.transform;
 		} 
 
 		

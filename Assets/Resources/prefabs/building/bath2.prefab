@@ -12,6 +12,7 @@ GameObject:
   - 61: {fileID: 6100000}
   - 95: {fileID: 9500000}
   - 114: {fileID: 11400000}
+  - 114: {fileID: 11400004}
   m_Layer: 0
   m_Name: door
   m_TagString: door
@@ -123,6 +124,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   connectedDoors: []
+  doorAnimator: {fileID: 0}
   connectedDoor: {fileID: 0}
 --- !u!114 &11400002
 MonoBehaviour:
@@ -137,6 +139,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parentRoom: {fileID: 0}
   actualRoom: {fileID: 0}
+  building: {fileID: 0}
+--- !u!114 &11400004
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e49180257a5e5214bb1e951e92cc1a68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!212 &21200000
 SpriteRenderer:
   m_ObjectHideFlags: 1

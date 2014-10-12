@@ -5,9 +5,11 @@ public class Event : MonoBehaviour {
 
 	public string startDateTime;
 	public string scriptName;
+	public GameObject from;
+	public GameObject target;
 	protected GameObject scriptObject;
 
-	public void init(string dateTime, string script)
+	public void init(string dateTime, string script, GameObject fromObject, GameObject targetObject)
 	{
 		NotificationCenter.DefaultCenter.AddObserver(this, "UpdateEvent");
 
@@ -15,6 +17,11 @@ public class Event : MonoBehaviour {
 		startDateTime = dateTime;
 		scriptName = script;
 		scriptObject.AddComponent (scriptName);
+
+		if( fromObject != null && targetObject != null) {
+			from = fromObject;
+			target = targetObject;
+		}
 	}
 
 	// Update is called once per frame
@@ -27,7 +34,13 @@ public class Event : MonoBehaviour {
 		    startTime[1] == clock.hour.ToString() &&
 		    startTime[2] == clock.minut.ToString()) 
 		{
-			this.scriptObject.SendMessage ("executeScript");
+
+			ArrayList parameters = new ArrayList();
+			if (from != null && from != null) {
+				parameters.Add(from);
+				parameters.Add(target);
+			}
+			this.scriptObject.SendMessage ("executeScript", parameters);
 			EventManager.eventList.Remove(this);
 			NotificationCenter.DefaultCenter.PostNotification(this, "eventCallback");
 

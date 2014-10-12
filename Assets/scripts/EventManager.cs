@@ -8,16 +8,20 @@ public class EventManager : MonoBehaviour {
 	void Start () {
 		NotificationCenter.DefaultCenter.AddObserver(this, "eventCallback");
 		eventList = new ArrayList();
-		addEvent("1_2_10", "showMessage");
+
+		GameObject player = GameObject.FindWithTag ("Player");
+		GameObject npc = GameObject.FindWithTag ("npc");
+
+		addEvent("1_0_5", "moveCharacter", npc, player);
 
 
 	}
 
-	public static void addEvent (string dateTime, string scriptName) {
+	public static void addEvent (string dateTime, string scriptName, GameObject from = null, GameObject target = null) {
 		GameObject eventObject = new GameObject ();
 
 		eventObject.AddComponent<Event>();
-		((Event)eventObject.GetComponent<Event>()).init(dateTime, scriptName);
+		((Event)eventObject.GetComponent<Event>()).init(dateTime, scriptName, from, target);
 
 	}
 

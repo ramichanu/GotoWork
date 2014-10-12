@@ -8,9 +8,11 @@ public class Room : MonoBehaviour {
 	public GameObject building;
 
 	public int getRoomDepth(){
-		if(parentRoom == null){
-			return 0;
-		}else{
+	if(parentRoom == null){
+		return 0;
+	}else if(parentRoom.transform.tag == "building"){
+			return 1;
+	}else{
 			return 1 + parentRoom.GetComponent<Room>().getRoomDepth();
 		}
 	}

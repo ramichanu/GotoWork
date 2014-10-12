@@ -4,6 +4,7 @@ using System.Collections;
 public class Utils : MonoBehaviour {
 
 	public const string PREFAB_BUILDING_FOLDER = "prefabs/building/";
+	public const string PREFAB_CHARACTER_FOLDER = "prefabs/character/";
 	public const string PLAYER_TAG = "Player";
 	// Use this for initialization
 	void Start () {

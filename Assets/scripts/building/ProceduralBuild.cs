@@ -19,6 +19,9 @@ public class ProceduralBuild : MonoBehaviour {
 	GameObject newRoom;
 	GameObject newProperty;
 	GameObject newBathRoom;
+	GameObject city;
+	GameObject newNpc;
+	GameObject player;
 
 	float positionY;
 	int buildingCount;
@@ -29,6 +32,25 @@ public class ProceduralBuild : MonoBehaviour {
 	}
 
 	void generateBuldings(){
+		city = new GameObject ();
+		city.AddComponent ("Room");
+		city.transform.tag = "scenary";
+		city.transform.name = "city1";
+		UnityEngine.Object npcObject = Resources.Load (Utils.PREFAB_CHARACTER_FOLDER + "npc");
+		newNpc = Instantiate(npcObject, transform.position= new Vector2(-4.4F, -5.9F), transform.rotation) as GameObject;
+		newNpc.GetComponent<characterValues>().currentRoom = city;
+		newNpc.transform.parent = city.transform;
+
+		UnityEngine.Object playerObject = Resources.Load (Utils.PREFAB_CHARACTER_FOLDER + "player");
+		player = Instantiate(playerObject, transform.position= new Vector2(-7.4F, -5.9F), transform.rotation) as GameObject;
+
+		GameObject camera = GameObject.FindWithTag ("MainCamera");
+		camera.GetComponent<Camera> ().target = player.transform;
+
+
+
+
+
 		buildingCount = Random.Range (1, buildingCountMax);
 		for (int i=1; i<=buildingCount; i++) {
 			positionY = 0;
@@ -43,6 +65,8 @@ public class ProceduralBuild : MonoBehaviour {
 		GameObject buildingMainDoor = Utils.getChildWithTag(newBuilding, "door");
 		generateOneHall(buildingMainDoor);
 		generateFloors();
+		newBuilding.transform.parent = city.transform;
+
 	}
 
 	void generateOneHall(GameObject buildingDoor){
@@ -58,6 +82,9 @@ public class ProceduralBuild : MonoBehaviour {
 			}
 		}
 		lastFloorStairUp = Utils.getChildWithTag (newHall, "stair");
+		player.transform.position = lastFloorStairUp.transform.position;
+		player.GetComponent<characterValues>().currentRoom = newHall;
+		player.transform.parent = newHall.transform;
 	}
 
 	void generateFloors(){

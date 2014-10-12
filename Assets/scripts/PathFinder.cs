@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class PathFinder : MonoBehaviour {
-
+	
 	List<CandidatePath> openList;
 	List<CandidatePath> closedList;
 	public GameObject target;
@@ -13,23 +13,30 @@ public class PathFinder : MonoBehaviour {
 	public GameObject fromBuilding;
 	public GameObject targetEntity;
 	public GameObject targetRoom;
-	List<GameObject> finalPath;
-
+	public Stack<GameObject> finalPath;
+	GameObject candidateObject;
+	
 	// Use this for initialization
-	void Start () {
+	void UpdatePath () {
 		bool finish = false;
 		bool sum = true;
 		openList = new List<CandidatePath>();
 		closedList = new List<CandidatePath>();
-
+		
 		currentRoom = from.GetComponent<characterValues>().currentRoom;
 		fromBuilding = currentRoom.GetComponent<Room>().building;
+
+
 		targetRoom = Utils.getFirstParentWithComponent(target, "Room");
+
 		targetEntity = targetRoom.GetComponent<Room>().building;
 
-
+		
+		GameObject parentEntity = null;
 		//Primer cop, es l'inicial
-		GameObject parentEntity = currentRoom.GetComponent<Room>().building;
+
+		parentEntity = currentRoom.GetComponent<Room>().building;
+
 		bool sameEntity = (parentEntity == targetEntity);
 		int weightRoom;
 		if(sameEntity){
@@ -37,7 +44,11 @@ public class PathFinder : MonoBehaviour {
 		}else{
 			weightRoom = currentRoom.GetComponent<Room>().getRoomDepth() + targetRoom.GetComponent<Room>().getRoomDepth();
 		}
-		GameObject candidateObject = new GameObject ();
+		if(candidateObject == null)
+		{
+			candidateObject = new GameObject ();
+		}
+
 		CandidatePath candidate = candidateObject.AddComponent<CandidatePath>();
 		candidate.weight = weightRoom;
 		candidate.currentWeight = 0;
@@ -48,35 +59,38 @@ public class PathFinder : MonoBehaviour {
 		List<CandidatePath> initialCandidates = new List<CandidatePath> ();
 		initialCandidates.Add(candidate);
 		putCandidatesInOpenList (initialCandidates);
-
+		
 		while (true) {
 			sortOpenList();
 			CandidatePath bestCandidate = getBestCandidateFromOpenList();
 			putCandidateInClosedList(bestCandidate);
 			if(Utils.getFirstParentWithComponent(bestCandidate.checkPoint, "Room") == targetRoom) break;
-
+			
 			List<CandidatePath> candidates = getCandidatesInPlaceByObject(bestCandidate);
 			putCandidatesInOpenList(candidates);
 		}
-
+		
 		finalPath = retrievePath ();
 	}
-
-	public List<GameObject> retrievePath(){
-		List<GameObject> finalPath = new List<GameObject> ();
+	
+	public Stack<GameObject> retrievePath(){
+		Stack<GameObject> finalPath = new Stack<GameObject> ();
 		CandidatePath path = closedList[closedList.Count-1];
+		finalPath.Push (target);
 		do {
-			if(path.checkPoint.tag != "Player")
+			if(path.checkPoint.tag != "Player" || path.checkPoint.tag != "npc")
 				Debug.Log (path.checkPoint.transform.parent.name);
-			finalPath.Add(path.checkPoint);
+			finalPath.Push(path.checkPoint);
 			path = path.previousCandidatePath;
 		} while (path != null);
+		//remove first element
+		finalPath.Pop ();
 		return finalPath;
 	}
 	
 	public List<CandidatePath> getCandidatesInPlaceByObject(CandidatePath obj){
 		GameObject room;
-		if (obj.checkPoint.tag == "Player") {
+		if (obj.checkPoint.tag == "Player" || obj.checkPoint.tag == "npc") {
 			room = obj.checkPoint.GetComponent<characterValues>().currentRoom;
 		} else {
 			room = Utils.getFirstParentWithComponent (obj.checkPoint, "Room"); 
@@ -87,7 +101,7 @@ public class PathFinder : MonoBehaviour {
 			GameObject parent = Utils.getFirstParentWithComponent(connectedDoor, "Room");
 			GameObject parentEntity = parent.GetComponent<Room>().building;
 			bool sameEntity = (parentEntity == targetEntity);
-
+			
 			int weightRoom;
 			if(sameEntity){
 				weightRoom = Mathf.Abs(parent.GetComponent<Room>().getRoomDepth() - targetRoom.GetComponent<Room>().getRoomDepth());
@@ -95,7 +109,11 @@ public class PathFinder : MonoBehaviour {
 				weightRoom = parent.GetComponent<Room>().getRoomDepth() + targetRoom.GetComponent<Room>().getRoomDepth();
 			}
 
-			GameObject candidateObject = new GameObject ();
+			if(candidateObject == null)
+			{
+				candidateObject = new GameObject ();
+			}
+
 			CandidatePath candidate = candidateObject.AddComponent<CandidatePath>();
 			candidate.weight = weightRoom;
 			candidate.currentWeight = obj.currentWeight + 1;
@@ -103,7 +121,7 @@ public class PathFinder : MonoBehaviour {
 			candidate.keyWeight = weight;
 			candidate.checkPoint = connectedDoor;
 			candidate.previousCandidatePath = obj;
-
+			
 			candidates.Add(candidate);
 		}
 		foreach (GameObject childStair in Utils.getChildrenWithTag(room, "stair")) {
@@ -111,14 +129,14 @@ public class PathFinder : MonoBehaviour {
 			GameObject parent = Utils.getFirstParentWithComponent(connectedStair, "Room");
 			GameObject parentEntity = parent.GetComponent<Room>().building;
 			bool sameEntity = (parentEntity == targetEntity);
-
+			
 			int weightRoom;
 			if(sameEntity){
 				weightRoom = Mathf.Abs(parent.GetComponent<Room>().getRoomDepth() - targetRoom.GetComponent<Room>().getRoomDepth());
 			}else{
 				weightRoom = parent.GetComponent<Room>().getRoomDepth() + targetRoom.GetComponent<Room>().getRoomDepth();
 			}
-
+			
 			GameObject candidateObject = new GameObject ();
 			CandidatePath candidate = candidateObject.AddComponent<CandidatePath>();
 			candidate.weight = weightRoom;
@@ -129,31 +147,31 @@ public class PathFinder : MonoBehaviour {
 			candidate.previousCandidatePath = obj;
 			candidates.Add(candidate);
 		}
-
+		
 		return candidates;
 	}
-
+	
 	public void putCandidatesInOpenList(List<CandidatePath> candidates){
 		foreach(CandidatePath candidate in candidates){
 			if((openList.Any(obj => obj.checkPoint == candidate.checkPoint) == false))
 				openList.Add(candidate);
 		}
 	}
-
+	
 	public CandidatePath getBestCandidateFromOpenList(){
 		CandidatePath bestCandidate = (CandidatePath)openList[0];
 		return bestCandidate;
 	}
-
+	
 	public void putCandidateInClosedList(CandidatePath candidate){
 		closedList.Add (candidate);
 		openList.Remove (candidate);
 	}
-
+	
 	public void sortOpenList(){
 		openList = openList.OrderBy(x => x.keyWeight).ToList();
 	}
-
+	
 	/*public void setCurrentRoom(CandidatePath bestCandidate){
 		string isDoorOrStair = bestCandidate.lastDoorStair.transform.tag;
 		currentWeight = bestCandidate.currentWeight;
