@@ -12,7 +12,7 @@ public class EventManager : MonoBehaviour {
 		GameObject player = GameObject.FindWithTag ("Player");
 		GameObject npc = GameObject.FindWithTag ("npc");
 
-		addEvent("1_0_5", "moveCharacter", npc, player);
+		//addEvent("1_0_5", "moveCharacter", npc, player);
 
 
 	}

@@ -80,7 +80,7 @@ public class NotificationCenter : MonoBehaviour
 		// Obtain the notification list, and make sure that it is valid as well
 		List<Component> notifyList = (List<Component>) notifications [aNotification.name];
 		if (notifyList == null) {
-			Debug.Log ("Notify list not found in PostNotification: " + aNotification.name);
+			//Debug.Log ("Notify list not found in PostNotification: " + aNotification.name);
 			return;
 		}
 		

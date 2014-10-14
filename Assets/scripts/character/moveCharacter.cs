@@ -7,40 +7,43 @@ public class moveCharacter : MonoBehaviour {
 	
 	GameObject from;
 	GameObject target;
+	public bool follow = false;
 	public Stack<GameObject> finalPath;
 	public float velocity = 3;
 
 	protected float pathFinderRefresh = 0.33f;
 	protected float acumulatedTime = 0;
 	protected GameObject gameManager;
-	
-	// Update is called once per frame
-	void executeScript (ArrayList parameters) {
+
+	public void executeScript (ArrayList parameters) {
 		target = (GameObject)parameters [1];
 		from = (GameObject)parameters [0];
 		gameManager = GameObject.FindWithTag ("gameManager");
-		gameManager.AddComponent ("PathFinder");
+		from.AddComponent ("PathFinder");
 
-		gameManager.GetComponent<PathFinder> ().enabled = true;
-		gameManager.GetComponent<PathFinder> ().target = target;
-		gameManager.GetComponent<PathFinder> ().from = from;
-		gameManager.GetComponent<PathFinder> ().SendMessage ("UpdatePath");
+		from.GetComponent<PathFinder> ().enabled = true;
+		from.GetComponent<PathFinder> ().target = target;
+		from.GetComponent<PathFinder> ().from = from;
+		from.GetComponent<PathFinder> ().SendMessage ("UpdatePath");
 
-		finalPath = gameManager.GetComponent<PathFinder> ().finalPath;
+		finalPath = from.GetComponent<PathFinder> ().finalPath;
 	}
 
 	void Update(){
 
-		acumulatedTime += Time.deltaTime;
-		if (acumulatedTime >= pathFinderRefresh) {
-			acumulatedTime = acumulatedTime - pathFinderRefresh;
-			if(gameManager != null)
-			{
-				gameManager.GetComponent<PathFinder> ().SendMessage ("UpdatePath");		
-				finalPath = gameManager.GetComponent<PathFinder> ().finalPath;
+		/*if (follow) {
+			acumulatedTime += Time.deltaTime;
+			if (acumulatedTime >= pathFinderRefresh) {
+				acumulatedTime = acumulatedTime - pathFinderRefresh;
+				if(gameManager != null)
+				{
+					gameManager.GetComponent<PathFinder> ().SendMessage ("UpdatePath");		
+					finalPath = gameManager.GetComponent<PathFinder> ().finalPath;
+				}
+				
 			}
+		}*/
 
-		}
 		movingCharacter();
 
 	}
@@ -83,6 +86,14 @@ public class moveCharacter : MonoBehaviour {
 					}
 					finalPath.Pop ();
 					targetObject = null;
+
+					if(Mathf.Round(from.transform.position.x) == Mathf.Round(target.transform.position.x))
+					{
+						Hashtable options = new Hashtable();
+						options.Add("from", from);
+						NotificationCenter.DefaultCenter.PostNotification(this, "scriptSuccess", options);
+					}
+
 				}
 			}
 		}

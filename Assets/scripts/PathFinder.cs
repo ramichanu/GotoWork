@@ -24,7 +24,7 @@ public class PathFinder : MonoBehaviour {
 		bool sum = true;
 		openList = new List<CandidatePath>();
 		closedList = new List<CandidatePath>();
-		
+
 		currentRoom = from.GetComponent<characterValues>().currentRoom;
 		fromBuilding = currentRoom.GetComponent<Room>().building;
 
@@ -91,8 +91,6 @@ public class PathFinder : MonoBehaviour {
 		CandidatePath path = closedList[closedList.Count-1];
 		finalPath.Push (target);
 		do {
-			if(path.checkPoint.tag != "Player" || path.checkPoint.tag != "npc")
-				Debug.Log (path.checkPoint.transform.parent.name);
 			finalPath.Push(path.checkPoint);
 			path = path.previousCandidatePath;
 		} while (path != null);

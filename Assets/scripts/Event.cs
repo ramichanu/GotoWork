@@ -11,7 +11,7 @@ public class Event : MonoBehaviour {
 
 	public void init(string dateTime, string script, GameObject fromObject, GameObject targetObject)
 	{
-		NotificationCenter.DefaultCenter.AddObserver(this, "UpdateEvent");
+		NotificationCenter.DefaultCenter.AddObserver(this, "UpdateScript");
 
 		scriptObject = new GameObject();
 		startDateTime = dateTime;
@@ -25,7 +25,7 @@ public class Event : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-	void UpdateEvent (Notification options) {
+	void UpdateScript (Notification options) {
 
 		Clock clock = (Clock)options.sender;
 		string[] startTime = startDateTime.Split('_');

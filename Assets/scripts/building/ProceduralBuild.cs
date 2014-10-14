@@ -4,10 +4,11 @@ using System.Collections;
 public class ProceduralBuild : MonoBehaviour {
 
 	//Public
-	public int buildingCountMax = 2;
-	public int floorCountMax = 5;
+	public int buildingCountMax = 0;
+	public int floorCountMax = 0;
 	public int spaceBetweetBuildings = 20;
 	public int verticalRoomPadding = 10;
+	public int npcCount = 1;
 	public GameObject floor;
 	public GameObject hall;
 	public GameObject property = null;
@@ -26,6 +27,7 @@ public class ProceduralBuild : MonoBehaviour {
 	float positionY;
 	int buildingCount;
 	int floorCount;
+
 	
 	void Start () { 
 		generateBuldings ();
@@ -36,10 +38,8 @@ public class ProceduralBuild : MonoBehaviour {
 		city.AddComponent ("Room");
 		city.transform.tag = "scenary";
 		city.transform.name = "city1";
-		UnityEngine.Object npcObject = Resources.Load (Utils.PREFAB_CHARACTER_FOLDER + "npc");
-		newNpc = Instantiate(npcObject, transform.position= new Vector2(-4.4F, -5.9F), transform.rotation) as GameObject;
-		newNpc.GetComponent<characterValues>().currentRoom = city;
-		newNpc.transform.parent = city.transform;
+
+
 
 		UnityEngine.Object playerObject = Resources.Load (Utils.PREFAB_CHARACTER_FOLDER + "player");
 		player = Instantiate(playerObject, transform.position= new Vector2(-7.4F, -5.9F), transform.rotation) as GameObject;
@@ -49,7 +49,7 @@ public class ProceduralBuild : MonoBehaviour {
 
 
 		buildingCount = Random.Range (1, buildingCountMax);
-		for (int i=1; i<=buildingCount; i++) {
+		for (int i=0; i<buildingCount; i++) {
 			positionY = 0;
 			generateOneBuilding(i);
 		}
@@ -133,6 +133,8 @@ public class ProceduralBuild : MonoBehaviour {
 		property = Instantiate(propertyObject, transform.position= new Vector2(newBuilding.transform.position.x, positionY), transform.rotation) as GameObject;
 		newRoom.transform.parent = property.transform;
 
+		addNpcAndAssignHome (newRoom);
+		
 		foreach (GameObject roomDoor in Utils.getChildrenWithTag(newRoom, "door")){
 			if(roomDoor.name == "entrance")
 			{
@@ -158,6 +160,34 @@ public class ProceduralBuild : MonoBehaviour {
 		foreach (GameObject bathDoor in Utils.getChildrenWithTag(newBathRoom, "door")){
 			bathDoor.GetComponent<Door>().connectedDoor = roomDoor;
 			roomDoor.GetComponent<Door>().connectedDoor = bathDoor;
+		}
+	}
+
+	void addNpcAndAssignHome(GameObject room){
+
+		if(this.npcCount <= this.npcCount){
+			UnityEngine.Object npcObject = Resources.Load (Utils.PREFAB_CHARACTER_FOLDER + "npc");
+			GameObject sofa = null;
+			foreach (GameObject roomItemIn in Utils.getChildrenWithTag(room, "object")){
+				
+				if(roomItemIn.name == "sofa")
+				{
+					sofa = roomItemIn;
+				}
+				
+			}
+
+			if(sofa != null)
+			{
+				newNpc = Instantiate(npcObject, transform.position= sofa.transform.position, transform.rotation) as GameObject;
+				newNpc.name = "npc" + this.npcCount;
+				newNpc.GetComponent<characterValues>().currentRoom = room;
+				newNpc.transform.parent = room.transform;
+				newNpc.renderer.sortingOrder = 1;
+				newNpc.AddComponent<npcIA>().home = room.transform.parent.gameObject;
+				this.npcCount++;
+			}
+
 		}
 	}
 

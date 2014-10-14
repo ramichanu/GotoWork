@@ -32,7 +32,7 @@ public class Clock : MonoBehaviour {
 		clockParams.Add("hour", hour);
 		clockParams.Add("minut", minut);
 
-		NotificationCenter.DefaultCenter.PostNotification(this, "UpdateEvent", clockParams);
+		NotificationCenter.DefaultCenter.PostNotification(this, "UpdateScript", clockParams);
 		clockParams.Clear();
 
 	
