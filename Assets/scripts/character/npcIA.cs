@@ -4,6 +4,7 @@ using System.Collections;
 public class npcIA : MonoBehaviour {
 
 	public GameObject home;
+	public GameObject homeCheckPoint;
 	public GameObject work;
 
 	public string npcState;
@@ -28,18 +29,19 @@ public class npcIA : MonoBehaviour {
 		string[] startTimeToWork = startTimeWork.Split('_');
 		string[] endTimeToWork = startTimeWork.Split('_');
 		
-		if (isTimeTo(startTimeToWork, clock))
+		if (isTimeTo(startTimeToWork, clock) && this.taskState != "running")
 		{
-			changeNpcStateAndExecuteTasks("goToWork");
+			this.npcState = "goToWork";
+			changeNpcStateAndExecuteTasks();
 		}
-		else if(isTimeTo(endTimeToWork, clock)) 
+		else if(isTimeTo(endTimeToWork, clock) && this.taskState != "running") 
 
 		{
-			changeNpcStateAndExecuteTasks("goToHome");
+			changeNpcStateAndExecuteTasks();
 		}
-		else if(npcState != "idle")
+		else if(npcState != "idle" && this.taskState != "running")
 		{
-			changeNpcStateAndExecuteTasks("idle");
+			//changeNpcStateAndExecuteTasks("idle");
 		}
 	}
 	bool isTimeTo(string[] timeTo, Clock clock)
@@ -49,18 +51,28 @@ public class npcIA : MonoBehaviour {
 				timeTo [2] == clock.minut.ToString ());
 		
 	}
-	void changeNpcStateAndExecuteTasks(string npcState){
-		switch(npcState)
+	void changeNpcStateAndExecuteTasks(){
+		Debug.Log ("npcState: " + this.npcState + "  -  taskState: " + this.taskState);
+		switch(this.npcState)
 		{
 		case "goToWork":
 			if(this.taskState != "running")
 			{
 				this.taskState = "running";
 				moveCharacterToWork();
-				this.npcState = "idle";
+				this.npcState = "goToHome";
 			}
 
 			break;
+		case "goToHome":
+			if(this.taskState != "running")
+			{
+				this.taskState = "running";
+				moveCharacterToHome();
+				this.npcState = "idle";
+			}
+		break;
+
 		}
 	}
 
@@ -75,8 +87,23 @@ public class npcIA : MonoBehaviour {
 		from.GetComponent<moveCharacter>().executeScript(fromAndTarget);
 	}
 
+	void moveCharacterToHome(){
+		GameObject from = gameObject;
+		ArrayList fromAndTarget = new ArrayList();
+		fromAndTarget.Add(from);
+		fromAndTarget.Add(homeCheckPoint);
+		
+		from.AddComponent<moveCharacter> ();
+		from.GetComponent<moveCharacter>().executeScript(fromAndTarget);
+	}
+
 	void scriptSuccess(Notification options){
-		Debug.Log ("SUCCESS");
-		this.taskState = "success";
+		moveCharacter moveCharacter = (moveCharacter)options.sender;
+		if(moveCharacter.from == gameObject)
+		{
+			this.taskState = "success";
+			changeNpcStateAndExecuteTasks ();
+		}
+
 	}
 }

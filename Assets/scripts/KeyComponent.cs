@@ -11,7 +11,6 @@ public class KeyComponent : MonoBehaviour {
 	// Update is called once per frame
 	void Update (){
 		if (Input.GetKeyUp ("up")){
-			Debug.Log(1111);
 			this.SendMessage ("use", GameObject.FindGameObjectWithTag("Player"));
 		}
 

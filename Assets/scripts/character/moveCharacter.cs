@@ -5,7 +5,7 @@ using System.Linq;
 
 public class moveCharacter : MonoBehaviour {
 	
-	GameObject from;
+	public GameObject from;
 	GameObject target;
 	public bool follow = false;
 	public Stack<GameObject> finalPath;
@@ -19,7 +19,10 @@ public class moveCharacter : MonoBehaviour {
 		target = (GameObject)parameters [1];
 		from = (GameObject)parameters [0];
 		gameManager = GameObject.FindWithTag ("gameManager");
-		from.AddComponent ("PathFinder");
+
+		if(	from.GetComponent<PathFinder> () == null){
+			from.AddComponent ("PathFinder");
+		}
 
 		from.GetComponent<PathFinder> ().enabled = true;
 		from.GetComponent<PathFinder> ().target = target;
@@ -31,7 +34,7 @@ public class moveCharacter : MonoBehaviour {
 
 	void Update(){
 
-		/*if (follow) {
+		if (follow) {
 			acumulatedTime += Time.deltaTime;
 			if (acumulatedTime >= pathFinderRefresh) {
 				acumulatedTime = acumulatedTime - pathFinderRefresh;
@@ -42,7 +45,7 @@ public class moveCharacter : MonoBehaviour {
 				}
 				
 			}
-		}*/
+		}
 
 		movingCharacter();
 

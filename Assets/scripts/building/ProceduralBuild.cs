@@ -8,7 +8,7 @@ public class ProceduralBuild : MonoBehaviour {
 	public int floorCountMax = 0;
 	public int spaceBetweetBuildings = 20;
 	public int verticalRoomPadding = 10;
-	public int npcCount = 1;
+	public int npcCountMax = 1;
 	public GameObject floor;
 	public GameObject hall;
 	public GameObject property = null;
@@ -27,6 +27,7 @@ public class ProceduralBuild : MonoBehaviour {
 	float positionY;
 	int buildingCount;
 	int floorCount;
+	int npcCount = 1;
 
 	
 	void Start () { 
@@ -165,7 +166,7 @@ public class ProceduralBuild : MonoBehaviour {
 
 	void addNpcAndAssignHome(GameObject room){
 
-		if(this.npcCount <= this.npcCount){
+		if(this.npcCount <= this.npcCountMax){
 			UnityEngine.Object npcObject = Resources.Load (Utils.PREFAB_CHARACTER_FOLDER + "npc");
 			GameObject sofa = null;
 			foreach (GameObject roomItemIn in Utils.getChildrenWithTag(room, "object")){
@@ -185,6 +186,7 @@ public class ProceduralBuild : MonoBehaviour {
 				newNpc.transform.parent = room.transform;
 				newNpc.renderer.sortingOrder = 1;
 				newNpc.AddComponent<npcIA>().home = room.transform.parent.gameObject;
+				newNpc.GetComponent<npcIA>().homeCheckPoint = sofa;
 				this.npcCount++;
 			}
 
