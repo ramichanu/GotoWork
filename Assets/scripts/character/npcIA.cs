@@ -2,11 +2,7 @@
 using System.Collections;
 
 public class npcIA : MonoBehaviour {
-
-	public GameObject home;
-	public GameObject homeCheckPoint;
-	public GameObject work;
-
+	
 	public string npcState;
 	public string taskState;
 	public string startTimeWork;
@@ -17,7 +13,7 @@ public class npcIA : MonoBehaviour {
 	void Start () {
 		npcState = "Idle";
 		startTimeWork = "1_0_10";
-		endTimeWork = "1_0_30";
+		endTimeWork = "1_1_50";
 		NotificationCenter.DefaultCenter.AddObserver(this, "scriptSuccess");
 	}
 	
@@ -27,17 +23,18 @@ public class npcIA : MonoBehaviour {
 		Clock clock = GameObject.FindWithTag("gameManager").GetComponent<Clock>();
 
 		string[] startTimeToWork = startTimeWork.Split('_');
-		string[] endTimeToWork = startTimeWork.Split('_');
-		
+		string[] endTimeToWork = endTimeWork.Split('_');
+
 		if (isTimeTo(startTimeToWork, clock) && this.taskState != "running")
 		{
+
 			this.npcState = "goToWork";
-			changeNpcStateAndExecuteTasks();
+			executeNpcTasksByNpcState();
 		}
 		else if(isTimeTo(endTimeToWork, clock) && this.taskState != "running") 
-
 		{
-			changeNpcStateAndExecuteTasks();
+			this.npcState = "goToHome";
+			executeNpcTasksByNpcState();
 		}
 		else if(npcState != "idle" && this.taskState != "running")
 		{
@@ -51,7 +48,7 @@ public class npcIA : MonoBehaviour {
 				timeTo [2] == clock.minut.ToString ());
 		
 	}
-	void changeNpcStateAndExecuteTasks(){
+	void executeNpcTasksByNpcState(){
 		Debug.Log ("npcState: " + this.npcState + "  -  taskState: " + this.taskState);
 		switch(this.npcState)
 		{
@@ -60,7 +57,6 @@ public class npcIA : MonoBehaviour {
 			{
 				this.taskState = "running";
 				moveCharacterToWork();
-				this.npcState = "goToHome";
 			}
 
 			break;
@@ -78,23 +74,21 @@ public class npcIA : MonoBehaviour {
 
 	void moveCharacterToWork(){
 		GameObject target = GameObject.FindWithTag("Player");
-		GameObject from = gameObject;
 		ArrayList fromAndTarget = new ArrayList();
-		fromAndTarget.Add(from);
-		fromAndTarget.Add (target);
 
-		from.AddComponent<moveCharacter> ();
-		from.GetComponent<moveCharacter>().executeScript(fromAndTarget);
+		fromAndTarget.Add(gameObject);
+		fromAndTarget.Add (gameObject.GetComponent<characterValues>().workCheckPoint);
+
+		gameObject.GetComponent<moveCharacter>().executeScript(fromAndTarget);
 	}
 
 	void moveCharacterToHome(){
-		GameObject from = gameObject;
+
 		ArrayList fromAndTarget = new ArrayList();
-		fromAndTarget.Add(from);
-		fromAndTarget.Add(homeCheckPoint);
-		
-		from.AddComponent<moveCharacter> ();
-		from.GetComponent<moveCharacter>().executeScript(fromAndTarget);
+		fromAndTarget.Add(gameObject);
+		fromAndTarget.Add(gameObject.GetComponent<characterValues>().homeCheckPoint);
+
+		gameObject.GetComponent<moveCharacter>().executeScript(fromAndTarget);
 	}
 
 	void scriptSuccess(Notification options){
@@ -102,7 +96,6 @@ public class npcIA : MonoBehaviour {
 		if(moveCharacter.from == gameObject)
 		{
 			this.taskState = "success";
-			changeNpcStateAndExecuteTasks ();
 		}
 
 	}

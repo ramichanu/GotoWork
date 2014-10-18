@@ -14,11 +14,13 @@ public class moveCharacter : MonoBehaviour {
 	protected float pathFinderRefresh = 0.33f;
 	protected float acumulatedTime = 0;
 	protected GameObject gameManager;
+	protected bool goalReached = false;
 
 	public void executeScript (ArrayList parameters) {
 		target = (GameObject)parameters [1];
 		from = (GameObject)parameters [0];
 		gameManager = GameObject.FindWithTag ("gameManager");
+		goalReached = false;
 
 		if(	from.GetComponent<PathFinder> () == null){
 			from.AddComponent ("PathFinder");
@@ -42,10 +44,12 @@ public class moveCharacter : MonoBehaviour {
 				{
 					gameManager.GetComponent<PathFinder> ().SendMessage ("UpdatePath");		
 					finalPath = gameManager.GetComponent<PathFinder> ().finalPath;
+					goalReached = false;
 				}
 				
 			}
 		}
+
 
 		movingCharacter();
 
@@ -90,11 +94,13 @@ public class moveCharacter : MonoBehaviour {
 					finalPath.Pop ();
 					targetObject = null;
 
-					if(Mathf.Round(from.transform.position.x) == Mathf.Round(target.transform.position.x))
+					if(Mathf.Round(from.transform.position.x) == Mathf.Round(target.transform.position.x) && !goalReached)
 					{
 						Hashtable options = new Hashtable();
 						options.Add("from", from);
 						NotificationCenter.DefaultCenter.PostNotification(this, "scriptSuccess", options);
+						goalReached = true;
+
 					}
 
 				}

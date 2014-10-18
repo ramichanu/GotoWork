@@ -15,6 +15,7 @@ TagManager:
   - street
   - scenary
   - candidate
+  - officeChair
   - 
   Builtin Layer 0: Default
   Builtin Layer 1: TransparentFX

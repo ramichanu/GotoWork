@@ -6,6 +6,9 @@ public class characterValues : MonoBehaviour {
 
 	public GameObject door;
 	public GameObject currentRoom;
+	public GameObject home;
+	public GameObject homeCheckPoint;
+	public GameObject workCheckPoint;
 
 	// Use this for initialization
 	void Start () {

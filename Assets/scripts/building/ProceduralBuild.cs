@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 public class ProceduralBuild : MonoBehaviour {
 
@@ -35,6 +37,7 @@ public class ProceduralBuild : MonoBehaviour {
 	
 	void Start () { 
 		generateBuldings ();
+		assignWorkToPlayerAndNpcs ();
 	}
 
 	void generateBuldings(){
@@ -193,12 +196,8 @@ public class ProceduralBuild : MonoBehaviour {
 		{
 			roomObject = Resources.Load (Utils.PREFAB_BUILDING_FOLDER + "office");
 			this.officeChairCount = 0;
-			foreach (GameObject roomItemIn in Utils.getChildrenWithTag((GameObject)roomObject, "object")){
-				
-				if(roomItemIn.name == "officeChair")
-				{
-					officeChairCount++;
-				}
+			foreach (GameObject roomItemIn in Utils.getChildrenWithTag((GameObject)roomObject, "officeChair")){
+				officeChairCount++;
 				
 			}
 			this.npcCountPlaceOffice += officeChairCount;
@@ -270,8 +269,8 @@ public class ProceduralBuild : MonoBehaviour {
 				newNpc.GetComponent<characterValues>().currentRoom = room;
 				newNpc.transform.parent = room.transform;
 				newNpc.renderer.sortingOrder = 1;
-				newNpc.AddComponent<npcIA>().home = room.transform.parent.gameObject;
-				newNpc.GetComponent<npcIA>().homeCheckPoint = sofa;
+				newNpc.GetComponent<characterValues>().home = room.transform.parent.gameObject;
+				newNpc.GetComponent<characterValues>().homeCheckPoint = sofa;
 				this.npcCount++;
 
 			}
@@ -288,8 +287,21 @@ public class ProceduralBuild : MonoBehaviour {
 		generateFloors();
 		newBuilding.transform.parent = city.transform;
 	}
-	void assignWorkToNpcs(){
+	void assignWorkToPlayerAndNpcs(){
 
+		List<GameObject> npcs = new List<GameObject>(GameObject.FindGameObjectsWithTag("npc"));
+		List<GameObject> officeChairs = new List<GameObject>(GameObject.FindGameObjectsWithTag("officeChair"));
+
+		int randomOfficeChairs = Random.Range(0, officeChairs.Count-1);
+		player.GetComponent<characterValues> ().workCheckPoint = officeChairs.ElementAt(randomOfficeChairs);
+		officeChairs.RemoveAt (randomOfficeChairs);
+
+
+		foreach (GameObject npc in npcs) {
+			randomOfficeChairs = Random.Range(0, officeChairs.Count-1);
+			npc.GetComponent<characterValues> ().workCheckPoint = officeChairs.ElementAt(randomOfficeChairs);
+			officeChairs.RemoveAt (randomOfficeChairs);
+		}
 	}
 
 	// Update is called once per frame
