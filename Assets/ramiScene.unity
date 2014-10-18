@@ -152,7 +152,7 @@ Camera:
   far clip plane: 1000.28003
   field of view: 60
   orthographic: 1
-  orthographic size: 7.28999996
+  orthographic size: 73.0999985
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -175,7 +175,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
 --- !u!1001 &527950164
 Prefab:
   m_ObjectHideFlags: 0
@@ -217,7 +217,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 2000000, guid: fef7d06c0731a82458fb8cb46dc5d142, type: 2}
       propertyPath: orthographic size
-      value: 7.28999996
+      value: 73.0999985
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: fef7d06c0731a82458fb8cb46dc5d142, type: 2}
@@ -253,7 +253,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
 --- !u!114 &1171404624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -266,13 +266,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buildingCountMax: 10
-  floorCountMax: 5
+  floorCountMax: 3
   spaceBetweetBuildings: 20
   verticalRoomPadding: 15
-  npcCountMax: 5
-  floor: {fileID: 100004, guid: 71d26428688e15a438ad327259c739da, type: 2}
-  hall: {fileID: 100004, guid: 2db745cee0abcf14bae24b1bb340fa18, type: 2}
+  npcCountMax: 30
+  buildingName: 
   property: {fileID: 100000, guid: 53f35bf0b9fc879439791b3d7cc06ff2, type: 2}
+  npcCountPlaceOffice: 0
 --- !u!114 &1171404626
 MonoBehaviour:
   m_ObjectHideFlags: 0

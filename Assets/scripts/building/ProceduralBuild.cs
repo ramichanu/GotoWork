@@ -9,11 +9,13 @@ public class ProceduralBuild : MonoBehaviour {
 	public int spaceBetweetBuildings = 20;
 	public int verticalRoomPadding = 10;
 	public int npcCountMax = 1;
-	public GameObject floor;
-	public GameObject hall;
+	public string buildingName = "";
 	public GameObject property = null;
+	public int npcCountPlaceOffice = 0;
+
 	//Private
 	GameObject lastFloorStairUp = null;
+	GameObject lastFloorStair = null;
 	GameObject newBuilding;
 	GameObject newHall;
 	GameObject newFloor;
@@ -28,6 +30,7 @@ public class ProceduralBuild : MonoBehaviour {
 	int buildingCount;
 	int floorCount;
 	int npcCount = 1;
+	int officeChairCount = 0;
 
 	
 	void Start () { 
@@ -35,11 +38,11 @@ public class ProceduralBuild : MonoBehaviour {
 	}
 
 	void generateBuldings(){
+
 		city = new GameObject ();
 		city.AddComponent ("Room");
 		city.transform.tag = "scenary";
 		city.transform.name = "city1";
-
 
 
 		UnityEngine.Object playerObject = Resources.Load (Utils.PREFAB_CHARACTER_FOLDER + "player");
@@ -49,16 +52,50 @@ public class ProceduralBuild : MonoBehaviour {
 		camera.GetComponent<Camera> ().target = player.transform;
 
 
-		buildingCount = Random.Range (1, buildingCountMax);
+		buildingCount = Random.Range (20, buildingCountMax);
+		bool needCompaniesToNpcs = false;
+		int buildingType = 0;
+
 		for (int i=0; i<buildingCount; i++) {
+
 			positionY = 0;
-			generateOneBuilding(i);
+			buildingType = 0;
+
+			if(needCompaniesToNpcs == false)
+			{
+				int randomCompanyOrResidence = Random.Range(0,2);
+				if((randomCompanyOrResidence == 1) && (i != 0)) 
+				{
+					buildingType = 1;
+				}
+			}else{
+				buildingType = 1;
+			}
+
+			if(this.npcCountPlaceOffice <= this.npcCount)
+			{
+				generateOneBuilding(i, buildingType);
+
+			}
+
+			if(i+1 == buildingCount && this.npcCountPlaceOffice <= this.npcCount){
+				buildingCount++;
+				needCompaniesToNpcs = true;
+			}
+
 		}
 	}
 
-	void generateOneBuilding(int i){
-		int buildingType= Random.Range (1, 4);
-		UnityEngine.Object buildingObject = Resources.Load (Utils.PREFAB_BUILDING_FOLDER + "building" + buildingType);
+	void generateOneBuilding(int i, int buildingType = 0){
+
+		if(buildingType == 0){
+			buildingType= Random.Range (1, 4);
+			this.buildingName = "building" + buildingType;
+		}else{
+			this.buildingName = "company" + buildingType;
+		}
+
+		UnityEngine.Object buildingObject = Resources.Load (Utils.PREFAB_BUILDING_FOLDER + this.buildingName);
 		newBuilding = Instantiate(buildingObject, transform.position= new Vector2(spaceBetweetBuildings*i, positionY), transform.rotation) as GameObject;
 		GameObject buildingMainDoor = Utils.getChildWithTag(newBuilding, "door");
 		generateOneHall(buildingMainDoor);
@@ -68,10 +105,21 @@ public class ProceduralBuild : MonoBehaviour {
 	}
 
 	void generateOneHall(GameObject buildingDoor){
+
+		string hallName = "";
+
+		if(this.buildingName == "company1"){
+			hallName = "hallCompany1";
+		}else{
+			hallName = "hall";
+		}
+
 		positionY += verticalRoomPadding;
+		UnityEngine.Object hall = Resources.Load (Utils.PREFAB_BUILDING_FOLDER + hallName);
 		newHall = Instantiate(hall, transform.position= new Vector2(newBuilding.transform.position.x, positionY), transform.rotation) as GameObject;
 		newHall.GetComponent<Room>().parentRoom = newBuilding;
 		newHall.GetComponent<Room>().building = newBuilding;
+
 		foreach (GameObject hallDoor in Utils.getChildrenWithTag(newHall, "door")){
 			if(hallDoor.name == "entrance")
 			{
@@ -87,22 +135,38 @@ public class ProceduralBuild : MonoBehaviour {
 
 	void generateFloors(){
 		floorCount = Random.Range (1, floorCountMax);
-		for (int i=1; i<=floorCount; i++) {
+		for (int i=0; i<=floorCount; i++) {
 			positionY += verticalRoomPadding;
-			generateOneFloor(i);
+			if(this.npcCountPlaceOffice <= this.npcCount)
+			{
+				generateOneFloor(i);
+			}else{
+				Destroy(lastFloorStair);
+			}
 		}
 	}
 
 	void generateOneFloor(int i){
+
+		UnityEngine.Object floor = null;
+		if(this.buildingName == "company1"){
+			floor = Resources.Load (Utils.PREFAB_BUILDING_FOLDER + "floorCompany1");
+		}else{
+			floor = Resources.Load (Utils.PREFAB_BUILDING_FOLDER + "floor1");
+		}
+
+
 		newFloor = Instantiate(floor, transform.position= new Vector2(newBuilding.transform.position.x, positionY), transform.rotation) as GameObject;
 		newFloor.GetComponent<Room>().parentRoom = newHall;
 		newFloor.GetComponent<Room>().building = newBuilding;
 		GameObject tempLastFloorStairUp = null;
+
 		foreach (GameObject floorStair in Utils.getChildrenWithTag(newFloor, "stair")){
 			if(floorStair.name == "stairDown"){
 				floorStair.GetComponent<Stair>().connectedStair = lastFloorStairUp;
 				lastFloorStairUp.GetComponent<Stair>().connectedStair = floorStair;
 			}else if(floorStair.name == "stairUp"){
+				lastFloorStair = floorStair;
 				if(i == floorCount){
 					Destroy(floorStair);
 				}else{
@@ -114,17 +178,35 @@ public class ProceduralBuild : MonoBehaviour {
 
 		foreach (GameObject floorDoor in Utils.getChildrenWithTag(newFloor, "door")){
 			positionY += verticalRoomPadding;
-			generateOneRoom(floorDoor);
+			generateOneRoom(newFloor, floorDoor);
 		}
 	}
 
 
 
-	void generateOneRoom(GameObject floorDoor){
+	void generateOneRoom(GameObject newFloor, GameObject floorDoor){
 
 		int roomType = Random.Range (1, 3);
+		UnityEngine.Object roomObject = null;
 
-		UnityEngine.Object roomObject = Resources.Load (Utils.PREFAB_BUILDING_FOLDER + "livingRoom" + roomType);
+		if(this.buildingName == "company1")
+		{
+			roomObject = Resources.Load (Utils.PREFAB_BUILDING_FOLDER + "office");
+			this.officeChairCount = 0;
+			foreach (GameObject roomItemIn in Utils.getChildrenWithTag((GameObject)roomObject, "object")){
+				
+				if(roomItemIn.name == "officeChair")
+				{
+					officeChairCount++;
+				}
+				
+			}
+			this.npcCountPlaceOffice += officeChairCount;
+
+		}else{
+			roomObject = Resources.Load (Utils.PREFAB_BUILDING_FOLDER + "livingRoom" + roomType);
+		}
+
 		newRoom = Instantiate(roomObject, transform.position= new Vector2(newBuilding.transform.position.x, positionY), transform.rotation) as GameObject;
 
 		newRoom.GetComponent<Room>().parentRoom = newFloor;
@@ -134,7 +216,10 @@ public class ProceduralBuild : MonoBehaviour {
 		property = Instantiate(propertyObject, transform.position= new Vector2(newBuilding.transform.position.x, positionY), transform.rotation) as GameObject;
 		newRoom.transform.parent = property.transform;
 
-		addNpcAndAssignHome (newRoom);
+		if (this.buildingName != "company1") {
+			addNpcAndAssignHome (newRoom);
+		}
+
 		
 		foreach (GameObject roomDoor in Utils.getChildrenWithTag(newRoom, "door")){
 			if(roomDoor.name == "entrance")
@@ -188,9 +273,23 @@ public class ProceduralBuild : MonoBehaviour {
 				newNpc.AddComponent<npcIA>().home = room.transform.parent.gameObject;
 				newNpc.GetComponent<npcIA>().homeCheckPoint = sofa;
 				this.npcCount++;
+
 			}
 
 		}
+	}
+
+	void generateOneCompany(int i)
+	{
+		UnityEngine.Object buildingObject = Resources.Load (Utils.PREFAB_BUILDING_FOLDER + "company1");
+		newBuilding = Instantiate(buildingObject, transform.position= new Vector2(spaceBetweetBuildings*i, positionY), transform.rotation) as GameObject;
+		GameObject buildingMainDoor = Utils.getChildWithTag(newBuilding, "door");
+		generateOneHall(buildingMainDoor);
+		generateFloors();
+		newBuilding.transform.parent = city.transform;
+	}
+	void assignWorkToNpcs(){
+
 	}
 
 	// Update is called once per frame
