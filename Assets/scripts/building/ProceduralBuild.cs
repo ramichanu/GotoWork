@@ -40,6 +40,10 @@ public class ProceduralBuild : MonoBehaviour {
 		assignWorkToPlayerAndNpcs ();
 	}
 
+	void inicialiceProcedural(){
+
+	}
+
 	void generateBuldings(){
 
 		city = new GameObject ();

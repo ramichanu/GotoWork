@@ -101,7 +101,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 527950164}
   m_GameObject: {fileID: 230026878}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3761b6aafe27e2342ba2a34744834339, type: 3}
   m_Name: 
@@ -219,6 +219,10 @@ Prefab:
       propertyPath: orthographic size
       value: 33.0299988
       objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: fef7d06c0731a82458fb8cb46dc5d142, type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: fef7d06c0731a82458fb8cb46dc5d142, type: 2}
   m_RootGameObject: {fileID: 230026878}
@@ -235,6 +239,7 @@ GameObject:
   - 114: {fileID: 1171404624}
   - 114: {fileID: 1171404626}
   - 114: {fileID: 1171404627}
+  - 114: {fileID: 1171404625}
   m_Layer: 0
   m_Name: gameManager
   m_TagString: gameManager
@@ -260,7 +265,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1171404622}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3723e0bc02114b7498abaf32d696e8c4, type: 3}
   m_Name: 
@@ -273,13 +278,36 @@ MonoBehaviour:
   buildingName: 
   property: {fileID: 100000, guid: 53f35bf0b9fc879439791b3d7cc06ff2, type: 2}
   npcCountPlaceOffice: 0
---- !u!114 &1171404626
+--- !u!114 &1171404625
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1171404622}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4643ddff71aacef4498c5e402b69e231, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  totalProperties: 102
+  totalEmptyProperties: 6
+  totalHomelessNpcs: 5
+  totalEmptyWorkPlaces: 5
+  maxFloorsPerPropertyBuilding: 5
+  maxFloorsPerOfficeBuilding: 7
+  minAppleBuildings: 3
+  maxAppleBuildings: 7
+  maxAppleSolar: 2
+  maxAppleAlley: 2
+  minAppleShops: 1
+  maxAppleShops: 3
+--- !u!114 &1171404626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1171404622}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 245d0fad17aceb3428e1c7faa4a30bef, type: 3}
   m_Name: 
@@ -293,7 +321,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1171404622}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2d2403da3cba37e4eaf60a547b19c9e0, type: 3}
   m_Name: 
