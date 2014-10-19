@@ -13,7 +13,8 @@ public class NewProceduralBuild : MonoBehaviour {
 	const int MIN_FLOORS_PER_PROPERTY_BUILDING = 1;
 	const int MIN_FLOORS_PER_OFFICE_BUILDING = 1;
 	const int OFFICES_PER_FLOOR = 1;
-	const int TOTAL_WORKPLACES_PER_OFFICE = 8;
+	const int TOTAL_WORKPLACES_PER_OFFICE = 6;
+	const float PERCENTAGE_OF_PROPERTY_BUILDINGS_WITH_SHOPS = 0.5f;
 
 	public int totalProperties = 102;
 	public int totalEmptyProperties = 6;
@@ -21,10 +22,10 @@ public class NewProceduralBuild : MonoBehaviour {
 
 	public int totalEmptyWorkPlaces = 5;
 	public int maxFloorsPerPropertyBuilding = 5;
-	public int maxFloorsPerOfficeBuilding = 7;
+	public int maxFloorsPerOfficeBuilding = 5;
 
 	public int minAppleBuildings = 3;
-	public int maxAppleBuildings = 7;
+	public int maxAppleBuildings = 5;
 	public int maxAppleSolar = 2;
 	public int maxAppleAlley = 2;
 
@@ -66,7 +67,6 @@ public class NewProceduralBuild : MonoBehaviour {
 		int propertiesLeft = this.totalProperties;
 		ArrayList officeBuildings = new ArrayList ();
 		int totalShops = 0;
-		int workPlacesLeft = this.totalWorkPlaces;
 
 		if(this.totalProperties % PROPERTIES_PER_FLOOR != 0)
 		{
@@ -82,16 +82,17 @@ public class NewProceduralBuild : MonoBehaviour {
 
 		//We calculate the properties total buildings and floors per buildings
 		while(propertiesLeft > 0){
-
 			int totalBuildingFloors = Random.Range(MIN_FLOORS_PER_PROPERTY_BUILDING, Mathf.Min((propertiesLeft / PROPERTIES_PER_FLOOR), this.maxFloorsPerPropertyBuilding));
 			propertyBuildings.Add(totalBuildingFloors);
 			propertiesLeft -= totalBuildingFloors * PROPERTIES_PER_FLOOR;
 		}
 
 		//We calculate the total shops
-		totalShops = Mathf.Min(workPlacesLeft, Mathf.RoundToInt(propertyBuildings.Count * 0.75F));
-		int extraShops = (this.totalWorkPlaces - totalShops) % (OFFICES_PER_FLOOR * TOTAL_WORKPLACES_PER_OFFICE);
-		totalShops += extraShops;
+		Debug.Log ("Buildings: " + propertyBuildings.Count + " TotalShops no round: " + propertyBuildings.Count * PERCENTAGE_OF_PROPERTY_BUILDINGS_WITH_SHOPS + " Total shops round: " + Mathf.RoundToInt (propertyBuildings.Count * PERCENTAGE_OF_PROPERTY_BUILDINGS_WITH_SHOPS));
+		totalShops = Mathf.Min(this.totalWorkPlaces, Mathf.RoundToInt(propertyBuildings.Count * PERCENTAGE_OF_PROPERTY_BUILDINGS_WITH_SHOPS));
+		int extraWorkPlaces = (this.totalWorkPlaces - totalShops) % (OFFICES_PER_FLOOR * TOTAL_WORKPLACES_PER_OFFICE);
+		this.totalWorkPlaces += extraWorkPlaces;
+		int workPlacesLeft = this.totalWorkPlaces;
 		workPlacesLeft -= totalShops;
 
 		//We calculate the offices total buildings and floors per buildings
@@ -166,29 +167,43 @@ public class NewProceduralBuild : MonoBehaviour {
 		}
 
 		//We calculate the shops total number per apple
+		if (totalShops < propertyBuildingsApples.Count * this.minAppleShops) {
+			Debug.LogError ("Error, less shops than the minimum per apple");
+			Application.Quit ();
+		}
+
+		int maxShopsAllowed = 0;
+		for(int i = 0; i < propertyBuildingsApples.Count; i++){
+			maxShopsAllowed += Mathf.Min((int)propertyBuildingsApples[i], this.maxAppleShops);
+		}
+		if (totalShops > maxShopsAllowed || totalShops > propertyBuildings.Count) {
+			Debug.LogError ("Error, more shops than maximum allowed");
+			Application.Quit ();
+		}
+
 		ArrayList shopsPerApples = new ArrayList ();
 		int shopsLeft = totalShops;
-		if (totalShops < propertyBuildingsApples.Count * this.minAppleShops || totalShops > propertyBuildings.Count) {
-			Debug.LogError ("Error, less shops than the minimum per apple or more than property buildings");
-			Application.Quit ();
-		} else {
-			for(int i = 0; i < propertyBuildingsApples.Count; i++){
-				shopsPerApples.Add (this.minAppleShops);
-			}
-			shopsLeft -= propertyBuildingsApples.Count * this.minAppleShops;
+		for(int i = 0; i < propertyBuildingsApples.Count; i++){
+			shopsPerApples.Add (this.minAppleShops);
+		}
+		shopsLeft -= propertyBuildingsApples.Count * this.minAppleShops;
 
-			ArrayList applesWithSpaceForShops = (ArrayList)shopsPerApples.Clone();
-			while(shopsLeft > 0 && applesWithSpaceForShops.Count - 1 >= 0){
-				int randomApple = Random.Range(0, applesWithSpaceForShops.Count -1);
-				//object apple = applesWithSpaceForShops[randomApple];
-				if((int)applesWithSpaceForShops[randomApple] < this.maxAppleShops && (int)applesWithSpaceForShops[randomApple] < (int)propertyBuildingsApples[shopsPerApples.IndexOf(applesWithSpaceForShops[randomApple])]){
-					applesWithSpaceForShops[randomApple] = (int)applesWithSpaceForShops[randomApple] + 1;
-					shopsLeft --;
-				}
-				Debug.Log ("apple: " + shopsPerApples.IndexOf(applesWithSpaceForShops[randomApple]));
-				if((int)applesWithSpaceForShops[randomApple] == this.maxAppleShops || (int)applesWithSpaceForShops[randomApple] == (int)propertyBuildingsApples[shopsPerApples.IndexOf(applesWithSpaceForShops[randomApple])]){
-					applesWithSpaceForShops.Remove(applesWithSpaceForShops[randomApple]);
-				}
+		ArrayList applesWithSpaceForShops = new ArrayList();
+		for(int i = 0; i < propertyBuildingsApples.Count; i++){
+			applesWithSpaceForShops.Add (i);
+		}
+		while(shopsLeft > 0 && applesWithSpaceForShops.Count - 1 >= 0){
+			int randomApple = Random.Range(0, applesWithSpaceForShops.Count -1);
+			//object apple = applesWithSpaceForShops[randomApple];
+			if((int)shopsPerApples[(int)applesWithSpaceForShops[randomApple]] < this.maxAppleShops && 
+			   (int)shopsPerApples[(int)applesWithSpaceForShops[randomApple]] < (int)propertyBuildingsApples[(int)applesWithSpaceForShops[randomApple]]){
+				shopsPerApples[(int)applesWithSpaceForShops[randomApple]] = (int)shopsPerApples[(int)applesWithSpaceForShops[randomApple]] + 1;
+				shopsLeft --;
+			}
+			//Debug.Log ("apple: " + shopsPerApples.IndexOf(applesWithSpaceForShops[randomApple]));
+			if((int)shopsPerApples[(int)applesWithSpaceForShops[randomApple]] == this.maxAppleShops || 
+			   (int)shopsPerApples[(int)applesWithSpaceForShops[randomApple]] == (int)propertyBuildingsApples[(int)applesWithSpaceForShops[randomApple]]){
+				applesWithSpaceForShops.Remove(applesWithSpaceForShops[randomApple]);
 			}
 		}
 
