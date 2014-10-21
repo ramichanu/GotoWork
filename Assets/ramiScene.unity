@@ -152,7 +152,7 @@ Camera:
   far clip plane: 1000.28003
   field of view: 60
   orthographic: 1
-  orthographic size: 33.0299988
+  orthographic size: 9.85999966
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -217,7 +217,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 2000000, guid: fef7d06c0731a82458fb8cb46dc5d142, type: 2}
       propertyPath: orthographic size
-      value: 33.0299988
+      value: 9.85999966
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: fef7d06c0731a82458fb8cb46dc5d142, type: 2}
       propertyPath: m_Enabled
@@ -294,9 +294,9 @@ MonoBehaviour:
   totalHomelessNpcs: 5
   totalEmptyWorkPlaces: 5
   maxFloorsPerPropertyBuilding: 5
-  maxFloorsPerOfficeBuilding: 7
+  maxFloorsPerOfficeBuilding: 5
   minAppleBuildings: 3
-  maxAppleBuildings: 7
+  maxAppleBuildings: 5
   maxAppleSolar: 2
   maxAppleAlley: 2
   minAppleShops: 1

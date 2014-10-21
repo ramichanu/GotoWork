@@ -52,7 +52,7 @@ public class ProceduralBuild : MonoBehaviour {
 		city.transform.name = "city1";
 
 
-		UnityEngine.Object playerObject = Resources.Load (Utils.PREFAB_CHARACTER_FOLDER + "player");
+		UnityEngine.Object playerObject = Resources.Load (Utils.PREFAB_CHARACTER_FOLDER + "player1");
 		player = Instantiate(playerObject, transform.position= new Vector2(-7.4F, -5.9F), transform.rotation) as GameObject;
 
 		GameObject camera = GameObject.FindWithTag ("MainCamera");
